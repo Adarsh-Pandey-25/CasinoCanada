@@ -1,0 +1,368 @@
+@import "tailwindcss";
+
+:root {
+  --background: transparent;
+  --foreground: #fafafa;
+  --gold: #ffd700;
+  --gold-rich: #d4af37;
+  --navy: #0a0e17;
+  --glass-bg: rgba(10, 8, 5, 0.78);
+  --glass-border: rgba(212, 175, 55, 0.42);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-gold: var(--gold);
+  --color-gold-rich: var(--gold-rich);
+  --color-navy: var(--navy);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-playfair);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: transparent;
+  color: var(--foreground);
+  font-family: var(--font-inter), system-ui, sans-serif;
+}
+
+/* Full-viewport fixed background — stays visible while scrolling */
+.page-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.page-background__fallback {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    165deg,
+    #0a0806 0%,
+    #12100c 40%,
+    #080604 100%
+  );
+}
+
+.page-background__picture {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.page-background__picture.is-visible {
+  opacity: 1;
+}
+
+.section-below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 600px;
+}
+
+.page-background__picture {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.page-background__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 40%;
+}
+
+.page-background__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.42) 0%,
+    rgba(12, 8, 4, 0.68) 45%,
+    rgba(6, 4, 2, 0.82) 100%
+  );
+}
+
+.page-background__vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at 35% 30%,
+    transparent 20%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+}
+
+/* Glass panels — warm tint to match gold casino interior */
+.glass-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.45),
+    0 0 28px rgba(255, 215, 0, 0.08),
+    inset 0 1px 0 rgba(255, 215, 0, 0.06);
+}
+
+.glass-panel-hover {
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+.glass-panel-hover:hover {
+  background: rgba(12, 9, 5, 0.82);
+  border-color: rgba(255, 215, 0, 0.55);
+  box-shadow:
+    0 4px 28px rgba(0, 0, 0, 0.5),
+    0 0 36px rgba(255, 215, 0, 0.18),
+    inset 0 1px 0 rgba(255, 215, 0, 0.08);
+}
+
+/* Spinwindeal-style border: long-tail glow line, synced on top 3 offers */
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 90deg;
+  inherits: true;
+}
+
+/* Parent drives --angle so all top-3 borders stay perfectly in sync */
+.casinos-list {
+  --d: 2.5s;
+  --angle: 90deg;
+  animation: border-tail-rotate var(--d) linear infinite;
+}
+
+.card-glow-border {
+  position: relative;
+  border-radius: 1rem;
+  isolation: isolate;
+}
+
+.card-glow-border__trail {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  border-radius: inherit;
+  padding: 3px;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#fff 0 0) content-box,
+    linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+}
+
+.card-glow-border__trail::before {
+  content: "";
+  position: absolute;
+  inset: -50%;
+  background: conic-gradient(
+    from var(--angle),
+    rgba(8, 6, 4, 1),
+    #ffd700 1turn,
+    #fff8dc 0.4turn,
+    rgba(255, 215, 0, 0) 0.2turn
+  );
+}
+
+.card-glow-border__inner {
+  position: relative;
+  z-index: 1;
+  border-color: rgba(212, 175, 55, 0.22) !important;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 215, 0, 0.06);
+}
+
+@keyframes border-tail-rotate {
+  100% {
+    --angle: 450deg;
+  }
+}
+
+/* Fallback when @property is unsupported: rotate equivalent gradient */
+@supports not (background: conic-gradient(from var(--angle), red, blue)) {
+  .card-glow-border__trail::before {
+    top: 50%;
+    left: 50%;
+    width: 280%;
+    height: 280%;
+    inset: auto;
+    transform: translate(-50%, -50%);
+    background: conic-gradient(
+      from 0deg,
+      rgba(8, 6, 4, 1),
+      rgba(255, 215, 0, 0) 72deg,
+      rgba(255, 215, 0, 0.35) 108deg,
+      rgba(255, 215, 0, 0.7) 144deg,
+      #fff8dc 180deg,
+      #ffd700 270deg,
+      #ffd700 360deg
+    );
+    animation: border-tail-spin var(--d) linear infinite;
+  }
+
+  @keyframes border-tail-spin {
+    to {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+}
+
+/* Cream logo plaque — keeps dark & light logos readable on dark cards */
+.logo-pod {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 4rem;
+  width: 100%;
+  max-width: 10rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.625rem;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 250, 240, 0.97) 0%,
+    rgba(248, 238, 218, 0.95) 100%
+  );
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  box-shadow:
+    0 2px 14px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.logo-pod__image {
+  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.25));
+}
+
+.text-gold-solid {
+  color: #ffd700;
+}
+
+.page-content h1,
+.page-content h2 {
+  color: #ffd700;
+}
+
+.text-shadow-premium {
+  text-shadow:
+    0 2px 20px rgba(0, 0, 0, 0.9),
+    0 0 40px rgba(0, 0, 0, 0.5);
+}
+
+.heading-glow {
+  color: #ffd700;
+  text-shadow:
+    0 0 12px rgba(255, 215, 0, 0.55),
+    0 0 24px rgba(255, 215, 0, 0.35),
+    0 2px 16px rgba(0, 0, 0, 0.85);
+}
+
+.description-glow {
+  text-shadow:
+    0 0 14px rgba(255, 215, 0, 0.3),
+    0 0 28px rgba(255, 255, 255, 0.12),
+    0 2px 18px rgba(0, 0, 0, 0.9);
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.badge-shimmer {
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #ffd700 25%,
+    #fff8dc 50%,
+    #ffd700 75%,
+    #d4af37 100%
+  );
+  background-size: 200% auto;
+  animation: shimmer 3s linear infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease forwards;
+}
+
+.faq-item[open] .faq-icon {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.faq-item[open] .faq-answer {
+  grid-template-rows: 1fr;
+}
+
+.faq-answer > p {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .badge-shimmer {
+    animation: none;
+  }
+
+  .casinos-list {
+    animation: none;
+  }
+
+  .card-glow-border__trail::before {
+    background: conic-gradient(
+      from 90deg,
+      rgba(8, 6, 4, 1),
+      #ffd700 1turn,
+      rgba(255, 215, 0, 0.35) 0.4turn
+    );
+  }
+}
