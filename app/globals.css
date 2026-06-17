@@ -233,6 +233,11 @@ body {
   }
 }
 
+/* Brand logo — paired with the page heading (hero & legal pages) */
+.brand-logo {
+  filter: drop-shadow(0 0 22px rgba(255, 215, 0, 0.32));
+}
+
 /* Cream logo plaque — keeps dark & light logos readable on dark cards */
 .logo-pod {
   display: flex;

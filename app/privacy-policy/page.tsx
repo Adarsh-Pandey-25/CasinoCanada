@@ -14,6 +14,7 @@ export default function PrivacyPolicyPage() {
     <LegalPageLayout
       title="Privacy Policy"
       description="How Canada Casino Guide handles your data when you browse our casino reviews and affiliate recommendations."
+      showLogo={false}
     >
       <section>
         <h2 className="text-gold-solid mb-3 font-[family-name:var(--font-playfair)] text-xl font-bold">

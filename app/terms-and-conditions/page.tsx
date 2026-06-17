@@ -14,6 +14,7 @@ export default function TermsAndConditionsPage() {
     <LegalPageLayout
       title="Terms and Conditions"
       description="Please read these terms carefully before using Canada Casino Guide and our casino comparison services."
+      showLogo={false}
     >
       <section>
         <h2 className="text-gold-solid mb-3 font-[family-name:var(--font-playfair)] text-xl font-bold">
